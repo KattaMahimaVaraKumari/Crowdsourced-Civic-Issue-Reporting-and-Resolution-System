@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { authenticate, authorize } from '../middleware/auth.js';
+import { analytics, createStaffUser, deleteIssue, listUsers, updateUser } from '../controllers/admin.controller.js';
+const router = Router();
+router.use(authenticate, authorize('admin'));
+router.get('/analytics', analytics);
+router.get('/users', listUsers);
+router.post('/users', createStaffUser);
+router.patch('/users/:id', updateUser);
+router.delete('/issues/:id', deleteIssue);
+export default router;
