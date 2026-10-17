@@ -24,9 +24,10 @@ import { clsx } from 'clsx';
 
 export interface CivicIssueStreamProps {
   onSelectIssue?: (issue: CivicIssue) => void;
+  onlyReportedBy?: string;
 }
 
-export const CivicIssueStream: React.FC<CivicIssueStreamProps> = ({ onSelectIssue }) => {
+export const CivicIssueStream: React.FC<CivicIssueStreamProps> = ({ onSelectIssue, onlyReportedBy }) => {
   const [issues, setIssues] = useState<CivicIssue[]>(MOCK_ISSUES);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedStatus, setSelectedStatus] = useState<string>('All');
@@ -80,6 +81,9 @@ export const CivicIssueStream: React.FC<CivicIssueStreamProps> = ({ onSelectIssu
   // Filter Logic
   const filteredIssues = issues
     .filter((issue) => {
+      if (onlyReportedBy && issue.reporterName !== onlyReportedBy) {
+        return false;
+      }
       // Category filter
       if (selectedCategory !== 'All' && issue.category !== selectedCategory) {
         return false;

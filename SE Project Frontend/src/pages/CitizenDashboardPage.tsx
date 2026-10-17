@@ -26,13 +26,16 @@ import { clsx } from 'clsx';
 export const CitizenDashboardPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'overview' | 'stream' | 'leaderboard' | 'report'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'my-issues' | 'stream' | 'leaderboard' | 'report'>('overview');
   const [selectedIssue, setSelectedIssue] = useState<CivicIssue | null>(null);
+  const citizenName = 'Sarah Jenkins';
 
   // Respond to hash changes or route parameters from AppShell sidebar navigation
   useEffect(() => {
     if (location.pathname === '/citizen/report' || location.hash === '#report' || location.hash === '#report-issue') {
       setActiveTab('report');
+    } else if (location.hash === '#my-issues') {
+      setActiveTab('my-issues');
     } else if (location.hash === '#stream' || location.hash === '#civic-stream') {
       setActiveTab('stream');
     } else if (location.hash === '#leaderboard') {
@@ -65,7 +68,7 @@ export const CitizenDashboardPage: React.FC = () => {
             Citizen Operations & Community Hub
           </h1>
           <p className="font-body-md text-xs text-on-surface-variant mt-0.5">
-            Welcome back, Sarah. Track neighborhood repair dispatches and contribute to community safety.
+            Welcome back, {citizenName}. Track neighborhood repair dispatches and contribute to community safety.
           </p>
         </div>
         <Button
@@ -247,6 +250,30 @@ export const CitizenDashboardPage: React.FC = () => {
 
       {/* Report Issue Dedicated View */}
       {activeTab === 'report' && <ReportIssueWizard />}
+
+      {/* Citizen's Reports */}
+      {activeTab === 'my-issues' && (
+        <section className="space-y-4" aria-labelledby="my-issues-heading">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 id="my-issues-heading" className="font-title-lg text-xl font-bold text-primary">
+                My Issues
+              </h2>
+              <p className="font-body-md text-xs text-on-surface-variant mt-1">
+                Track the reports you have submitted and their current status.
+              </p>
+            </div>
+            <Button onClick={() => navigate('/citizen/dashboard#report')} size="md" className="gap-2 self-start sm:self-auto">
+              <PlusCircle className="w-4 h-4" />
+              <span>Report New Issue</span>
+            </Button>
+          </div>
+          <CivicIssueStream
+            onlyReportedBy={citizenName}
+            onSelectIssue={(issue) => setSelectedIssue(issue)}
+          />
+        </section>
+      )}
 
       {/* Civic Stream Dedicated View */}
       {activeTab === 'stream' && <CivicIssueStream onSelectIssue={(issue) => setSelectedIssue(issue)} />}
