@@ -87,10 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, onItemClick, className }
           {navItems.map((item) => {
             const Icon = ICON_MAP[item.iconName] || LayoutDashboard;
             const currentUrl = location.pathname + (location.hash || '');
-            const isActive =
-              currentUrl === item.href ||
-              (location.pathname === item.href && !item.href.includes('#')) ||
-              (!location.hash && item.href.endsWith('/dashboard'));
+            const isActive = currentUrl === item.href;
 
             return (
               <button
